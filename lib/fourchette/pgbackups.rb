@@ -26,9 +26,7 @@ class Fourchette::Pgbackups
   end
 
   def pg_details_for app_name
-    @heroku.config_vars(app_name).each do |key, value|
-      return [value, key] if key.start_with?('HEROKU_POSTGRESQL_') && key.end_with?('_URL')
-    end
+    [@heroku.config_vars(app_name)['DATABASE_URL'], 'DATABASE_URL']
   end
 
   def pgbackup_url app_name
