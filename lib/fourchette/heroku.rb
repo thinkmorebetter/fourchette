@@ -16,7 +16,7 @@ class Fourchette::Heroku
     create_app(to)
     copy_config(from, to)
     copy_add_ons(from, to)
-    copy_pg(from, to)
+    # copy_pg(from, to) # no more pg copy now that pgbackups is deprecated
     copy_rack_and_rails_env_again(from, to)
   end
 
