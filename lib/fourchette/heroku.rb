@@ -59,6 +59,7 @@ class Fourchette::Heroku
     from_addons = client.addon.list(from)
     from_addons.each do |addon|
       name = addon['plan']['name']
+      next if name == "deployhooks:http"
 
       # force hobby tier for the database addon since we can't do pg:wait and pgbackups fails when the production tier db isn't ready yet
       name = 'heroku-postgresql:hobby-basic' if name.start_with?('heroku-postgresql')
