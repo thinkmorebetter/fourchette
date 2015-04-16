@@ -59,16 +59,25 @@ class Fourchette::Heroku
     from_addons = client.addon.list(from)
     from_addons.each do |addon|
       name = addon['plan']['name']
+      name = "logentries:tryit" if name == "logentries:starter"
+      next if name == "deployhooks:http" || name == "memcachier:dev"
 
       # force hobby tier for the database addon since we can't do pg:wait and pgbackups fails when the production tier db isn't ready yet
       name = 'heroku-postgresql:hobby-basic' if name.start_with?('heroku-postgresql')
-      
+
       begin
+        tries ||= 0
         logger.info "Adding #{name} to #{to}"
         client.addon.create(to, plan: name)
       rescue *EXCEPTIONS => e
         logger.error "Failed to copy addon #{name}"
         logger.error e
+        if (tries += 1) <= 3
+          logger.info "Retrying (#{tries})..."
+          retry
+        else
+          raise
+        end
       end
     end
   end

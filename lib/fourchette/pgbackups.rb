@@ -7,9 +7,6 @@ class Fourchette::Pgbackups
   end
 
   def copy(from, to)
-    ensure_pgbackups_is_present(from)
-    ensure_pgbackups_is_present(to)
-
     from_url, from_name = pg_details_for(from)
     to_url, to_name = pg_details_for(to)
 
@@ -18,13 +15,6 @@ class Fourchette::Pgbackups
   end
 
   private
-
-  def ensure_pgbackups_is_present(heroku_app_name)
-    unless existing_backups?(heroku_app_name)
-      logger.info "Adding pgbackups to #{heroku_app_name}"
-      @heroku.client.addon.create(heroku_app_name, { plan: 'pgbackups' })
-    end
-  end
 
   def existing_backups?(heroku_app_name)
     @heroku.client.addon.list(heroku_app_name).select do |addon|

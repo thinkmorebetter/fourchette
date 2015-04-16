@@ -134,7 +134,7 @@ describe Fourchette::Heroku do
 
     context 'when a heroku-postgresql addon is enabled' do
       let(:addon_list) do
-        [{ 'addon_service' => { 'name' => 'Heroku Postgres' } }]
+        [{ 'addon_service' => { 'name' => 'heroku-postgresql' } }]
       end
 
       it 'calls Fourchette::Pgbackups#copy' do
