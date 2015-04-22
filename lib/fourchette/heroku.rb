@@ -69,6 +69,9 @@ class Fourchette::Heroku
       rescue *EXCEPTIONS => e
         logger.error "Failed to copy addon #{name}"
         logger.error e
+      rescue Exception => e
+        logger.error e
+        raise e
       end
     end
   end
